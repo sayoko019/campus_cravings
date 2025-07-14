@@ -1,7 +1,9 @@
+const { Client, GatewayIntentBits, Events, REST, Routes, SlashCommandBuilder, Collection } = require('discord.js');
+const recipebook = require('./recipe.js');
+
 require('dotenv').config();
 console.log("Loaded token from .env:", process.env.TOKEN);
 // NEU Diner Bot - index.js
-const { Client, GatewayIntentBits, Events, REST, Routes, SlashCommandBuilder, Collection } = require('discord.js');
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
 // Debug: Check if token is loading
