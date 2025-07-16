@@ -6,6 +6,10 @@ Commands in our bot are JavaScript files-modules that have the following public 
 export interface Command {
     commandName: string;
     command: SlashCommandBuilder;
+    /**
+     * Either ORDER_CHANNEL_ID or COOK_CHANNEL_ID from common.js.
+     */
+    permittedChannels: ChannelId[];
     handle: (client: Client, interaction: CommandInteraction): void;  
 }
 ```
@@ -16,6 +20,7 @@ Export items using the following syntax:
 module.exports = {
     commandName,
     command,
+    permittedChannels,
     handle,
 }
 ```
@@ -38,6 +43,8 @@ const command = new SlashCommandBuilder()
     .addStringOption((opt) =>
         opt.setName("food").setDescription("Dish to taste").setRequired(true),
     );
+
+const permittedChannels = [ORDER_CHANNEL_ID];
 
 function tasteBadResponses(food) {
     return [
@@ -90,16 +97,9 @@ function tasteGoodResponses(food) {
 }
 
 function handle(client, interaction) {
-    const { options, channelId } = interaction;
+    const { options } = interaction;
 
     const food = options.getString("food").toLowerCase();
-
-    if (channelId !== ORDER_CHANNEL_ID)
-        return interaction.reply({
-            content: "Tasting only allowed in the cafeteria.",
-            ephemeral: true,
-        });
-
 
     let isCursed = cursedIngredients.find((word) => food.includes(word));
     if (isCursed)
@@ -115,6 +115,7 @@ function handle(client, interaction) {
 module.exports = {
     command,
     commandName,
+    permittedChannels,
     handle,
 }
 ```
