@@ -1,31 +1,40 @@
-const {
+import type { SlashCommandBuilder, Interaction } from "discord.js";
+import type { CommandModule } from "./common";
+
+import {
   Client,
   GatewayIntentBits,
   Events,
   REST,
   Routes,
   Collection,
-} = require("discord.js");
+} from "discord.js";
 
-const order = require("./commands/order.js");
-const cook = require("./commands/cook.js");
-const taste = require("./commands/taste.js");
-const specials = require("./commands/specials.js");
-const foodfight = require("./commands/foodfight.js");
-const serve = require("./commands/serve.js");
-const inspect = require("./commands/inspect.js");
-const clean = require("./commands/clean.js");
-const recipebook = require("./recipe.js");
+import { commandModule as order } from "./commands/order.js";
+import { commandModule as cook } from "./commands/cook.js";
+import { commandModule as taste } from "./commands/taste.js";
+import { commandModule as specials } from "./commands/specials.js";
+import { commandModule as foodfight } from "./commands/foodfight.js";
+import { commandModule as serve } from "./commands/serve.js";
+import { commandModule as inspect } from "./commands/inspect.js";
+import { commandModule as clean } from "./commands/clean.js";
+import { commandModule as recipebook } from "./commands/recipebook/index.js";
 
-const commandModules = [order, cook, taste, specials, foodfight, serve, inspect, clean];
+const commandModules = [order, cook, taste, specials, foodfight, serve, inspect, clean, recipebook] satisfies CommandModule[];
 
-require("dotenv").config();
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
+interface ClientWithCommands extends Client {
+  commands: Collection<string, any>
+}
 
 console.log("Loaded token from .env:", process.env.TOKEN);
 // NEU Diner Bot - index.js
-const client = new Client({
+const client: ClientWithCommands = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
-});
+}) as ClientWithCommands;
 
 // Debug: Check if token is loading
 console.log("Token loaded:", process.env.TOKEN ? "[REDACTED]" : "MISSING");
@@ -37,9 +46,9 @@ client.commands = new Collection();
 commands.forEach((cmd) => client.commands.set(cmd.name, cmd));
 
 client.once(Events.ClientReady, async () => {
-  const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+  const rest = new REST({ version: "10" }).setToken(process.env.TOKEN!);
   try {
-    await rest.put(Routes.applicationCommands(client.user.id), {
+    await rest.put(Routes.applicationCommands(client.user!.id), {
       body: commands,
     });
     console.log("Commands registered. Bot is ready.");
@@ -48,7 +57,10 @@ client.once(Events.ClientReady, async () => {
   }
 });
 
-client.on(Events.InteractionCreate, async (interaction) => {
+client.on(Events.InteractionCreate, async (interaction: Interaction) => {
+  if (interaction.isButton()) {
+    await recipebook.onButtonInteraction(interaction);
+  }
   if (!interaction.isChatInputCommand()) return;
 
   const { commandName, channelId } = interaction;

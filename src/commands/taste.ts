@@ -1,7 +1,9 @@
-const {
+import {
+    ChatInputCommandInteraction,
+    Client,
     SlashCommandBuilder
-} = require("discord.js");
-const { ORDER_CHANNEL_ID, cursedIngredients, randomElement } = require("../common.js");
+} from "discord.js";
+import { ORDER_CHANNEL_ID, cursedIngredients, randomElement, type CommandModule } from "../common.js";
 
 const commandName = "taste";
 
@@ -14,7 +16,7 @@ const command = new SlashCommandBuilder()
 
 const permittedChannels = [ORDER_CHANNEL_ID];
 
-function tasteBadResponses(food) {
+function tasteBadResponses(food: string) {
     return [
         `${food}? You just made Gordon Ramsay retire.`,
         `This ${food} is so raw it just tried to cross the road.`,
@@ -39,7 +41,7 @@ function tasteBadResponses(food) {
     ]
 }
 
-function tasteGoodResponses(food) {
+function tasteGoodResponses(food: string) {
     return [
         `This ${food} brought tears to my eyes. Good tears.`,
         `Gordon Ramsay just nodded in approval. Silently. Respectfully.`,
@@ -64,10 +66,10 @@ function tasteGoodResponses(food) {
     ]
 }
 
-function handle(client, interaction) {
+function handle(client: Client, interaction: ChatInputCommandInteraction) {
     const { options } = interaction;
 
-    const food = options.getString("food").toLowerCase();
+    const food = options.getString("food")!.toLowerCase();
 
     let isCursed = cursedIngredients.find((word) => food.includes(word));
     if (isCursed)
@@ -80,9 +82,9 @@ function handle(client, interaction) {
     return interaction.reply(line);
 }
 
-module.exports = {
-    command,
+export const commandModule: CommandModule = {
     commandName,
+    command,
     permittedChannels,
     handle,
-}
+};

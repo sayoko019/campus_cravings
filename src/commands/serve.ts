@@ -1,5 +1,5 @@
-const { SlashCommandBuilder } = require("discord.js");
-const { recentDishes, COOK_CHANNEL_ID, ORDER_CHANNEL_ID } = require("../common.js");
+import { ChannelType, ChatInputCommandInteraction, Client, SlashCommandBuilder, User, type Channel } from "discord.js";
+import { recentDishes, COOK_CHANNEL_ID, ORDER_CHANNEL_ID, type CommandModule } from "../common.js";
 
 const commandName = "serve";
 
@@ -15,11 +15,11 @@ const command = new SlashCommandBuilder()
 
 const permittedChannels = [COOK_CHANNEL_ID];
 
-function handle(client, interaction) {
+function handle(client: Client, interaction: ChatInputCommandInteraction) {
     const { options, channelId } = interaction;
 
-    const target = options.getUser("target");
-    const food = options.getString("food");
+    const target: User = options.getUser("target")!;
+    const food: string = options.getString("food")!;
 
     if (channelId !== COOK_CHANNEL_ID)
         return interaction.reply({
@@ -40,11 +40,20 @@ function handle(client, interaction) {
         `You served ${target.username} a plate of ${food}. They look... concerned.`,
     );
 
-    const cafeteriaChannel = client.channels.cache.get(ORDER_CHANNEL_ID);
+    const cafeteriaChannel: Channel = client.channels.cache.get(ORDER_CHANNEL_ID)!;
+
+    if (cafeteriaChannel.type !== ChannelType.GuildText) {
+        console.error("Cafeteria channel is not a text channel.");
+        return interaction.followUp({
+            content: "Error: Cafeteria channel is not a text channel.",
+            ephemeral: true,
+        });
+    }
+
     cafeteriaChannel.send(`<@${target.id}>, your order of ${food} has been served!`);
 }
 
-module.exports = {
+export const commandModule: CommandModule = {
     commandName,
     command,
     permittedChannels,

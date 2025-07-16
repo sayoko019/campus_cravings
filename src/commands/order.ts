@@ -1,7 +1,9 @@
-const {
+import {
+    ChatInputCommandInteraction,
+    Client,
     SlashCommandBuilder
-} = require("discord.js");
-const { ORDER_CHANNEL_ID, cursedIngredients, recentOrders, randomElement } = require("../common.js");
+} from "discord.js";
+import { ORDER_CHANNEL_ID, cursedIngredients, recentOrders, randomElement, type CommandModule } from "../common.js";
 
 const commandName = "order";
 
@@ -14,7 +16,7 @@ const command = new SlashCommandBuilder()
 
 const permittedChannels = [ORDER_CHANNEL_ID];
 
-function cursedOrderResponses(food, orderId) {
+function cursedOrderResponses(food: string, orderId: number) {
     return [
         `That ${food} is a biohazard. Are you okay?`,
         `You ordered ${food}? Bold. And possibly fatal.`,
@@ -31,7 +33,7 @@ function cursedOrderResponses(food, orderId) {
     ]
 }
 
-function normalOrderResponses(food, orderId) {
+function normalOrderResponses(food: string, orderId: number) {
     return [
         `Order received: ${food}. It’ll be ready when the kitchen stops screaming.`,
         `Coming right up: one slightly suspicious ${food}.`,
@@ -48,24 +50,24 @@ function normalOrderResponses(food, orderId) {
     ]
 }
 
-function handle(client, interaction) {
+function handle(client: Client, interaction: ChatInputCommandInteraction) {
     const { options, user } = interaction;
 
-    const food = options.getString("food").toLowerCase();
+    const food: string = options.getString("food")!.toLowerCase();
 
-    const orderId = recentOrders.enqueue(food, user.id);
+    const orderId: number = recentOrders.enqueue(food, user.id);
 
-    const isCursed = cursedIngredients.find((word) => food.includes(word));
-    const responsesFunction = isCursed ? cursedOrderResponses : normalOrderResponses;
-    const responseArray = responsesFunction(food, orderId);
-    const response = randomElement(responseArray);
+    const isCursed: boolean = cursedIngredients.find((word) => food.includes(word)) !== undefined;
+    const responsesFunction: (food: string, orderId: number) => string[] = isCursed ? cursedOrderResponses : normalOrderResponses;
+    const responseArray: string[] = responsesFunction(food, orderId);
+    const response: string = randomElement(responseArray);
 
     return interaction.reply(response);
 }
 
-module.exports = {
-    command,
+export const commandModule: CommandModule = {
     commandName,
+    command,
     permittedChannels,
     handle,
-}
+};

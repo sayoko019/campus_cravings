@@ -1,7 +1,9 @@
-const {
+import {
+    ChatInputCommandInteraction,
+    Client,
     SlashCommandBuilder
-} = require("discord.js");
-const { COOK_CHANNEL_ID, randomElement } = require("../common");
+} from "discord.js";
+import { COOK_CHANNEL_ID, randomElement, type CommandModule } from "../common.js";
 
 const commandName = "inspect";
 
@@ -14,7 +16,7 @@ const command = new SlashCommandBuilder()
 
 const permittedChannels = [COOK_CHANNEL_ID];
 
-function renderResponses(food) {
+function renderResponses(food: string) {
     return [
         `${food} looks... edible. Maybe.`,
         `There's definitely something moving in the ${food}.`,
@@ -24,8 +26,8 @@ function renderResponses(food) {
     ];
 }
 
-function handle(client, interaction) {
-    const food = interaction.options.getString("food");
+function handle(client: Client, interaction: ChatInputCommandInteraction) {
+    const food: string = interaction.options.getString("food")!;
 
     const responses = renderResponses(food);
 
@@ -34,7 +36,7 @@ function handle(client, interaction) {
     return interaction.reply(response);
 }
 
-module.exports = {
+export const commandModule: CommandModule = {
     commandName,
     command,
     permittedChannels,

@@ -1,7 +1,10 @@
-const {
-    SlashCommandBuilder
-} = require("discord.js");
-const { ORDER_CHANNEL_ID, randomElement } = require("../common.js");
+import {
+    ChatInputCommandInteraction,
+    Client,
+    SlashCommandBuilder,
+    User
+} from "discord.js";
+import { ORDER_CHANNEL_ID, randomElement, type CommandModule } from "../common.js";
 
 const commandName = "foodfight";
 
@@ -20,7 +23,7 @@ const command = new SlashCommandBuilder()
 
 const permittedChannels = [ORDER_CHANNEL_ID];
 
-function renderResponses(target, food) {
+function renderResponses(target: User, food: string) {
     return [
         `You nailed ${target.username} with a flying ${food}!`,
         `You missed! ${target.username} dodged the ${food}.`,
@@ -69,11 +72,11 @@ function renderResponses(target, food) {
     ]
 }
 
-function handle(client, interaction) {
+function handle(client: Client, interaction: ChatInputCommandInteraction) {
     const { options } = interaction;
 
-    const target = options.getUser("target");
-    const food = options.getString("food").toLowerCase();
+    const target: User = options.getUser("target")!;
+    const food: string = options.getString("food")!.toLowerCase();
 
     const responses = renderResponses(target, food);
     let random = randomElement(responses);
@@ -81,9 +84,9 @@ function handle(client, interaction) {
     return interaction.reply(random);
 }
 
-module.exports = {
-    command,
+export const commandModule: CommandModule = {
     commandName,
+    command,
     permittedChannels,
     handle,
-}
+};

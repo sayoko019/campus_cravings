@@ -1,7 +1,9 @@
-const {
+import {
+    ChatInputCommandInteraction,
+    Client,
     SlashCommandBuilder
-} = require("discord.js");
-const { recentOrders, recentDishes, cursedIngredients, COOK_CHANNEL_ID } = require("../common");
+} from "discord.js";
+import { recentOrders, recentDishes, cursedIngredients, COOK_CHANNEL_ID, type CommandModule } from "../common.js";
 
 const commandName = "cook";
 
@@ -14,10 +16,10 @@ const command = new SlashCommandBuilder()
 
 const permittedChannels = [COOK_CHANNEL_ID];
 
-function handle(client, interaction) {
+function handle(client: Client, interaction: ChatInputCommandInteraction) {
     const { options } = interaction;
 
-    const food = options.getString("food").toLowerCase();
+    const food = options.getString("food")!.toLowerCase();
     let isCursed = cursedIngredients.find((word) => food.includes(word));
     if (isCursed) {
         return interaction.reply(
@@ -67,9 +69,9 @@ function handle(client, interaction) {
     // let randomFail = fails[Math.floor(Math.random() * fails.length)];
 }
 
-module.exports = {
+export const commandModule: CommandModule = {
     commandName,
     command,
     permittedChannels,
     handle,
-}
+};

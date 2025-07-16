@@ -1,10 +1,22 @@
+import type { ButtonInteraction, ChatInputCommandInteraction, Client, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, User } from "discord.js";
+
+export interface CommandModule {
+    commandName: string;
+    command: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+    permittedChannels: string[];
+    handle: (client: Client, interaction: ChatInputCommandInteraction) => void;
+    onButtonInteraction?: (interaction: ButtonInteraction) => Promise<void>;
+}
+
 const foodQueueMapSize = 10;
 
-const ORDER_CHANNEL_ID = "1392337668100198430";
-const COOK_CHANNEL_ID = "1392344681085403267";
+export const ORDER_CHANNEL_ID = "1392337668100198430";
+export const COOK_CHANNEL_ID = "1392344681085403267";
+
+type OrderId = number;
 
 // Cursed ingredients
-const cursedIngredients = [
+export const cursedIngredients = [
     "cockroach",
     "glass",
     "nails",
@@ -13,24 +25,27 @@ const cursedIngredients = [
     "socks",
     "poison",
     "soap",
-];
+] as const;
 
 class FoodQueueMap {
+    orderNumber: number;
+    orders: Map<number, { food: string; userId: string }>;
+
     constructor() {
         this.orderNumber = 0;
         // a map from time to food and user ID
         this.orders = new Map();
     }
 
-    enqueue(food, userId, orderId = null) {
+    enqueue(food: string, userId: User["id"], orderId: OrderId | null = null) {
         if (this.orders.size >= foodQueueMapSize) {
             // Remove the oldest order
-            const oldestKey = this.orders.keys().next().value;
+            const oldestKey: OrderId = this.orders.keys().next().value!;
             this.orders.delete(oldestKey);
         }
 
         if (orderId === null) {
-            orderId = this.orderNumber;
+            orderId = this.orderNumber satisfies OrderId;
         } else if (this.orders.has(orderId)) {
             throw new Error(`Order ID ${orderId} already exists.`);
         }
@@ -40,7 +55,7 @@ class FoodQueueMap {
         return this.orderNumber - 1;
     }
 
-    dequeue(foodArg, userIdArg = null) {
+    dequeue(foodArg: string, userIdArg: User["id"] | null = null) {
         for (const [key, value] of this.orders.entries()) {
             if (value.food !== foodArg) continue;
             if (userIdArg !== null && value.userId !== userIdArg) continue;
@@ -57,19 +72,10 @@ class FoodQueueMap {
 }
 
 // Enquing into recentOrders should omit the orderId argument
-const recentOrders = new FoodQueueMap();
+export const recentOrders = new FoodQueueMap();
 // Enquing into recentDishes should explicitly provide the userId argument
-const recentDishes = new FoodQueueMap();
+export const recentDishes = new FoodQueueMap();
 
-function randomElement(arr) {
+export function randomElement<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
-}
-
-module.exports = {
-    ORDER_CHANNEL_ID,
-    COOK_CHANNEL_ID,
-    cursedIngredients,
-    recentOrders,
-    recentDishes,
-    randomElement,
 }

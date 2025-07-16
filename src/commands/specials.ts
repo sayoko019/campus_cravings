@@ -1,7 +1,10 @@
-const {
+import type { ChatInputCommandInteraction, Client } from "discord.js";
+import type { CommandModule } from "../common";
+
+import {
     SlashCommandBuilder
-} = require("discord.js");
-const { ORDER_CHANNEL_ID, randomElement } = require("../common.js");
+} from "discord.js";
+import { ORDER_CHANNEL_ID, randomElement } from "../common.js";
 
 const commandName = "specials";
 
@@ -107,15 +110,7 @@ const secretMenu = [
     "Glowing eel soup",
 ];
 
-function handle(client, interaction) {
-    const { channelId } = interaction;
-
-    if (channelId !== ORDER_CHANNEL_ID)
-        return interaction.reply({
-            content: "Asking specials only allowed in the cafeteria.",
-            ephemeral: true,
-        });
-
+function handle(client: Client, interaction: ChatInputCommandInteraction) {
     let chosen = randomElement(specials);
     let secret =
         Math.random() < 0.05
@@ -124,9 +119,9 @@ function handle(client, interaction) {
     return interaction.reply(`Today’s special: ${chosen}.${secret}`);
 }
 
-module.exports = {
-    command,
+export const commandModule: CommandModule = {
     commandName,
+    command,
     permittedChannels,
     handle,
-}
+};
