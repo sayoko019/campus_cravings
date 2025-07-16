@@ -15,3 +15,9 @@ npm run start
 ```
 
 *Note: make sure you have a `.env` file in the root directory with the necessary environment variables.*
+
+## Pulling the latest changes
+
+```bash
+git pull
+```
