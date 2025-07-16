@@ -21,3 +21,19 @@ npm run start
 ```bash
 git pull
 ```
+
+## TODO list
+
+* exact steps for recipebooks arent implemented
+* /eat command being made
+* edit the /serve command, so they can serve after cooking with recipebook
+* mini games for cooking with recipe book
+
+## commiting changes
+
+```bash
+# add unnecessary files to .gitignore then 
+git add .
+git commit -m "commit description"
+git push
+```
