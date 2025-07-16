@@ -18,6 +18,8 @@ const command = new SlashCommandBuilder()
         opt.setName("food").setDescription("What to throw").setRequired(true),
     );
 
+const permittedChannels = [ORDER_CHANNEL_ID];
+
 function renderResponses(target, food) {
     return [
         `You nailed ${target.username} with a flying ${food}!`,
@@ -68,16 +70,10 @@ function renderResponses(target, food) {
 }
 
 function handle(client, interaction) {
-    const { options, channelId } = interaction;
+    const { options } = interaction;
 
     const target = options.getUser("target");
     const food = options.getString("food").toLowerCase();
-
-    if (channelId !== ORDER_CHANNEL_ID)
-        return interaction.reply({
-            content: "Tasting only allowed in the cafeteria.",
-            ephemeral: true,
-        });
 
     const responses = renderResponses(target, food);
     let random = randomElement(responses);
@@ -88,5 +84,6 @@ function handle(client, interaction) {
 module.exports = {
     command,
     commandName,
+    permittedChannels,
     handle,
 }

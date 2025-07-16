@@ -13,6 +13,8 @@ const command = new SlashCommandBuilder()
         opt.setName("food").setDescription("What you're serving").setRequired(true),
     );
 
+const permittedChannels = [COOK_CHANNEL_ID];
+
 function handle(client, interaction) {
     const { options, channelId } = interaction;
 
@@ -45,5 +47,6 @@ function handle(client, interaction) {
 module.exports = {
     commandName,
     command,
+    permittedChannels,
     handle,
 };

@@ -14,9 +14,10 @@ const specials = require("./commands/specials.js");
 const foodfight = require("./commands/foodfight.js");
 const serve = require("./commands/serve.js");
 const inspect = require("./commands/inspect.js");
+const clean = require("./commands/clean.js");
 const recipebook = require("./recipe.js");
 
-const commandModules = [order, cook, taste, specials, foodfight, serve, inspect];
+const commandModules = [order, cook, taste, specials, foodfight, serve, inspect, clean];
 
 require("dotenv").config();
 
@@ -50,25 +51,22 @@ client.once(Events.ClientReady, async () => {
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  const { commandName, options, channelId, user } = interaction;
+  const { commandName, channelId } = interaction;
 
   for (const commandModule of commandModules) {
     if (commandModule.commandName === commandName) {
+      if (!commandModule.permittedChannels.includes(channelId)) {
+        const channelMentions = commandModule.permittedChannels.map(
+          (id) => `<#${id}>`
+        );
+        return interaction.reply({
+          content: `This command can only be used in specific channels: ${channelMentions.join(", ")}`,
+          ephemeral: true,
+        });
+      }
       commandModule.handle(client, interaction);
       return;
     }
-  }
-
-  if (commandName === "clean") {
-    const results = [
-      `You scrub the counter. A sentient blob hisses and retreats.`,
-      `The sink is cleaner now. The void under it remains.`,
-      `You swept the floor. You found... someone’s soul?`,
-      `You cleaned up. The hamster chef nods in approval.`,
-      `Soap and bleach applied. Cursed essence lingers anyway.`,
-    ];
-    let result = results[Math.floor(Math.random() * results.length)];
-    return interaction.reply(result);
   }
 });
 

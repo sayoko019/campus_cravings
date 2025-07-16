@@ -12,15 +12,12 @@ const command = new SlashCommandBuilder()
         opt.setName("food").setDescription("Name of the dish").setRequired(true),
     );
 
+const permittedChannels = [COOK_CHANNEL_ID];
+
 function handle(client, interaction) {
-    const { options, channelId } = interaction;
+    const { options } = interaction;
 
     const food = options.getString("food").toLowerCase();
-    if (channelId !== COOK_CHANNEL_ID)
-        return interaction.reply({
-            content: "Cooking only allowed in the kitchen channel.",
-            ephemeral: true,
-        });
     let isCursed = cursedIngredients.find((word) => food.includes(word));
     if (isCursed) {
         return interaction.reply(
@@ -73,5 +70,6 @@ function handle(client, interaction) {
 module.exports = {
     commandName,
     command,
+    permittedChannels,
     handle,
 }

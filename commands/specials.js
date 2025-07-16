@@ -9,6 +9,8 @@ const command = new SlashCommandBuilder()
     .setName(commandName)
     .setDescription("See today's random special");
 
+const permittedChannels = [ORDER_CHANNEL_ID];
+
 const specials = [
     "Creamy mushroom pasta",
     "Beetle-shell brittle",
@@ -125,5 +127,6 @@ function handle(client, interaction) {
 module.exports = {
     command,
     commandName,
+    permittedChannels,
     handle,
 }

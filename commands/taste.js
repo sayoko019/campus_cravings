@@ -12,6 +12,8 @@ const command = new SlashCommandBuilder()
         opt.setName("food").setDescription("Dish to taste").setRequired(true),
     );
 
+const permittedChannels = [ORDER_CHANNEL_ID];
+
 function tasteBadResponses(food) {
     return [
         `${food}? You just made Gordon Ramsay retire.`,
@@ -63,16 +65,9 @@ function tasteGoodResponses(food) {
 }
 
 function handle(client, interaction) {
-    const { options, channelId } = interaction;
+    const { options } = interaction;
 
     const food = options.getString("food").toLowerCase();
-
-    if (channelId !== ORDER_CHANNEL_ID)
-        return interaction.reply({
-            content: "Tasting only allowed in the cafeteria.",
-            ephemeral: true,
-        });
-
 
     let isCursed = cursedIngredients.find((word) => food.includes(word));
     if (isCursed)
@@ -88,5 +83,6 @@ function handle(client, interaction) {
 module.exports = {
     command,
     commandName,
+    permittedChannels,
     handle,
 }

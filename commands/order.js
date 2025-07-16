@@ -12,6 +12,8 @@ const command = new SlashCommandBuilder()
         opt.setName("food").setDescription("Name of the food").setRequired(true),
     );
 
+const permittedChannels = [ORDER_CHANNEL_ID];
+
 function cursedOrderResponses(food, orderId) {
     return [
         `That ${food} is a biohazard. Are you okay?`,
@@ -47,14 +49,9 @@ function normalOrderResponses(food, orderId) {
 }
 
 function handle(client, interaction) {
-    const { options, channelId, user } = interaction;
+    const { options, user } = interaction;
 
     const food = options.getString("food").toLowerCase();
-    if (channelId !== ORDER_CHANNEL_ID)
-        return interaction.reply({
-            content: "Orders only allowed in the diner order channel.",
-            ephemeral: true,
-        });
 
     const orderId = recentOrders.enqueue(food, user.id);
 
@@ -69,5 +66,6 @@ function handle(client, interaction) {
 module.exports = {
     command,
     commandName,
+    permittedChannels,
     handle,
 }

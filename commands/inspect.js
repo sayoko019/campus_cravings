@@ -1,7 +1,7 @@
 const {
     SlashCommandBuilder
 } = require("discord.js");
-const { randomElement } = require("../common");
+const { COOK_CHANNEL_ID, randomElement } = require("../common");
 
 const commandName = "inspect";
 
@@ -11,6 +11,8 @@ const command = new SlashCommandBuilder()
     .addStringOption((opt) =>
         opt.setName("food").setDescription("Dish to inspect").setRequired(true),
     );
+
+const permittedChannels = [COOK_CHANNEL_ID];
 
 function renderResponses(food) {
     return [
@@ -35,5 +37,6 @@ function handle(client, interaction) {
 module.exports = {
     commandName,
     command,
+    permittedChannels,
     handle,
 };
