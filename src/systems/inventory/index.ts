@@ -70,10 +70,6 @@ export function grantItem(userId: User["id"], inventoryItemData: InventoryItemDa
     }
     const userInventory: InventoryItemData[] = inventories.get(userId)!;
 
-    // TODO: consider item unqueness, e.g. cooked dishes of the same kind
-    // might have different qualities or properties
-    // For now, we just add the item or increase its quantity
-
     if (inventoryItemData.isUnique) {
         userInventory.push(inventoryItemData);
         inventories.set(userId, userInventory);
