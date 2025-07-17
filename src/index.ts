@@ -10,6 +10,8 @@ import {
   Collection,
 } from "discord.js";
 
+import { systemModule as inventorySystem } from "./systems/inventory/index.js";
+
 import { commandModule as order } from "./commands/order.js";
 import { commandModule as cook } from "./commands/cook.js";
 import { commandModule as taste } from "./commands/taste.js";
@@ -20,7 +22,9 @@ import { commandModule as inspect } from "./commands/inspect.js";
 import { commandModule as clean } from "./commands/clean.js";
 import { commandModule as recipebook } from "./commands/recipebook/index.js";
 
-const commandModules = [order, cook, taste, specials, foodfight, serve, inspect, clean, recipebook] satisfies CommandModule[];
+import { commandModule as inventory } from "./systems/inventory/commands/inventory.js";
+
+const commandModules = [order, cook, taste, specials, foodfight, serve, inspect, clean, recipebook, inventory] satisfies CommandModule[];
 
 import * as dotenv from "dotenv";
 
@@ -46,6 +50,13 @@ client.commands = new Collection();
 commands.forEach((cmd) => client.commands.set(cmd.name, cmd));
 
 client.once(Events.ClientReady, async () => {
+  try {
+    await inventorySystem.onStart();
+  } catch (error) {
+    console.error("Error during inventory system startup:", error);
+    process.exit(1);
+  }
+
   const rest = new REST({ version: "10" }).setToken(process.env.TOKEN!);
   try {
     await rest.put(Routes.applicationCommands(client.user!.id), {
@@ -81,6 +92,15 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
     }
   }
 });
+
+async function gracefulShutdown() {
+  console.log("Shutting down gracefully...");
+  await inventorySystem.onStop();
+  process.exit(0);
+}
+
+process.on('SIGINT', gracefulShutdown);
+process.on('SIGTERM', gracefulShutdown);
 
 // ✅ Final line — use the token from .env properly!
 client.login(process.env.TOKEN);

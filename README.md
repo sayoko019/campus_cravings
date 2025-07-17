@@ -24,9 +24,8 @@ git pull
 
 ## TODO list
 
-* exact steps for recipebooks arent implemented
-* /eat command being made
-* edit the /serve command, so they can serve after cooking with recipebook
+* `/eat` command being made
+* edit the `/serve` command, so they can serve after cooking with recipebook
 * mini games for cooking with recipe book
 
 ## commiting changes

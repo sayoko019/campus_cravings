@@ -8,6 +8,11 @@ export interface CommandModule {
     onButtonInteraction?: (interaction: ButtonInteraction) => Promise<void>;
 }
 
+export interface SystemModule {
+    onStart: () => Promise<void>;
+    onStop: () => Promise<void>;
+}
+
 const foodQueueMapSize = 10;
 
 export const ORDER_CHANNEL_ID = "1392337668100198430";

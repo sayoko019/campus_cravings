@@ -1,5 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { ViewedState, viewedStates } from "../../viewed_states.js";
+import { grantItem, InventoryItemData } from "../../../../systems/inventory/index.js";
 
 function finishCooking(interaction: ButtonInteraction, viewedState: Extract<ViewedState, { id: "performing_cooking_step" }>) {
     const userId = interaction.user.id;
@@ -12,11 +13,20 @@ function finishCooking(interaction: ButtonInteraction, viewedState: Extract<View
     );
 
     const payload = {
-        content: `You have completed all cooking steps for ${viewedState.recipe.name}!`,
+        content: `You have completed all cooking steps for ${viewedState.recipe.name}!\n\n You can find the cooked dish in your inventory.`,
         components: [row] as any,
     };
 
-    // TODO: add logic for granting rewards
+    const inventoryItemData: InventoryItemData = {
+        itemId: viewedState.recipe.itemId,
+        itemKind: "recipe-cooked-food",
+        isUnique: true,
+        quantity: 1,
+        name: viewedState.recipe.name,
+        description: viewedState.recipe.description,
+    };
+
+    grantItem(userId, inventoryItemData);
 
     interaction.update(payload);
 }

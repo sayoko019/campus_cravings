@@ -13,18 +13,26 @@ type GrowExp<A extends Array<any>, N extends number, P extends Array<Array<any>>
 
 export type FixedSizeArray<T, N extends number> = N extends 0 ? [] : N extends 1 ? [T] : GrowExp<[T, T], N, [[T]]>;
 
-export interface Recipe {
+interface GenRecipe<ItemId> {
   name: string;
+  itemId: ItemId;
   origin: string;
   description: string;
   steps: string[];
 }
+
+// ValidationRecipe type exists only to ensure that the recipeBook is valid
+// However, in the rest of the codebase, it's better to type ItemId as a union type
+// of item IDs, so we use FoodItemId instead.
+type ValidationRecipe = GenRecipe<string>;
+export type Recipe = GenRecipe<FoodItemId>;
 
 export const recipeBookSize = 107 as const;
 
 export const recipeBook = [
   {
     "name": "nasi lemak",
+    "itemId": "nasi_lemak",
     "origin": "Malaysia",
     "description": "Fragrant coconut rice with sambal, anchovies, peanuts, egg, and cucumber.",
     "steps": [
@@ -37,6 +45,7 @@ export const recipeBook = [
   },
   {
     "name": "ratatouille",
+    "itemId": "ratatouille",
     "origin": "France",
     "description": "A stewed vegetable dish traditionally from Provence.",
     "steps": [
@@ -49,6 +58,7 @@ export const recipeBook = [
   },
   {
     "name": "jollof rice",
+    "itemId": "jollof_rice",
     "origin": "West Africa",
     "description": "Spicy tomato rice cooked with peppers, onions, and meat.",
     "steps": [
@@ -61,6 +71,7 @@ export const recipeBook = [
   },
   {
     "name": "pad thai",
+    "itemId": "pad_thai",
     "origin": "Thailand",
     "description": "Stir-fried rice noodles with shrimp, tofu, egg, and peanuts.",
     "steps": [
@@ -73,6 +84,7 @@ export const recipeBook = [
   },
   {
     "name": "pierogi",
+    "itemId": "pierogi",
     "origin": "Poland",
     "description": "Dumplings stuffed with potato, cheese, or meat.",
     "steps": [
@@ -85,6 +97,7 @@ export const recipeBook = [
   },
   {
     "name": "arepas",
+    "itemId": "arepas",
     "origin": "Venezuela/Colombia",
     "description": "Cornmeal patties often filled with cheese, meat, or avocado.",
     "steps": [
@@ -96,6 +109,7 @@ export const recipeBook = [
   },
   {
     "name": "takoyaki",
+    "itemId": "takoyaki",
     "origin": "Japan",
     "description": "Ball-shaped snack with octopus, batter, and toppings.",
     "steps": [
@@ -108,6 +122,7 @@ export const recipeBook = [
   },
   {
     "name": "goulash",
+    "itemId": "goulash",
     "origin": "Hungary",
     "description": "Hearty beef stew with paprika.",
     "steps": [
@@ -120,6 +135,7 @@ export const recipeBook = [
   },
   {
     "name": "ceviche",
+    "itemId": "ceviche",
     "origin": "Peru",
     "description": "Raw fish cured in citrus juice with onions, chilies, and cilantro.",
     "steps": [
@@ -132,6 +148,7 @@ export const recipeBook = [
   },
   {
     "name": "fried insects",
+    "itemId": "fried_insects",
     "origin": "Various",
     "description": "Crispy seasoned insects such as crickets or mealworms.",
     "steps": [
@@ -143,6 +160,7 @@ export const recipeBook = [
   },
   {
     "name": "kimchi fried rice",
+    "itemId": "kimchi_fried_rice",
     "origin": "Korea",
     "description": "Fried rice with kimchi and egg.",
     "steps": [
@@ -153,6 +171,7 @@ export const recipeBook = [
   },
   {
     "name": "biryani",
+    "itemId": "biryani",
     "origin": "India",
     "description": "Spiced rice layered with meat.",
     "steps": [
@@ -164,6 +183,7 @@ export const recipeBook = [
   },
   {
     "name": "empanadas",
+    "itemId": "empanadas",
     "origin": "Latin America",
     "description": "Stuffed pastry turnovers.",
     "steps": [
@@ -175,6 +195,7 @@ export const recipeBook = [
   },
   {
     "name": "pho",
+    "itemId": "pho",
     "origin": "Vietnam",
     "description": "Beef noodle soup with herbs.",
     "steps": [
@@ -186,6 +207,7 @@ export const recipeBook = [
   },
   {
     "name": "beef stroganoff",
+    "itemId": "beef_stroganoff",
     "origin": "Russia",
     "description": "Beef in creamy mushroom sauce.",
     "steps": [
@@ -197,6 +219,7 @@ export const recipeBook = [
   },
   {
     "name": "laksa",
+    "itemId": "laksa",
     "origin": "Malaysia/Singapore",
     "description": "Spicy coconut noodle soup.",
     "steps": [
@@ -207,6 +230,7 @@ export const recipeBook = [
   },
   {
     "name": "tacos al pastor",
+    "itemId": "tacos_al_pastor",
     "origin": "Mexico",
     "description": "Marinated pork tacos with pineapple.",
     "steps": [
@@ -217,6 +241,7 @@ export const recipeBook = [
   },
   {
     "name": "chicken tikka masala",
+    "itemId": "chicken_tikka_masala",
     "origin": "UK/India",
     "description": "Grilled chicken in tomato cream sauce.",
     "steps": [
@@ -227,6 +252,7 @@ export const recipeBook = [
   },
   {
     "name": "okonomiyaki",
+    "itemId": "okonomiyaki",
     "origin": "Japan",
     "description": "Savory cabbage pancake.",
     "steps": [
@@ -237,6 +263,7 @@ export const recipeBook = [
   },
   {
     "name": "poutine",
+    "itemId": "poutine",
     "origin": "Canada",
     "description": "Fries with cheese curds and gravy.",
     "steps": [
@@ -247,6 +274,7 @@ export const recipeBook = [
   },
   {
     "name": "moussaka",
+    "itemId": "moussaka",
     "origin": "Greece",
     "description": "Baked dish with layers of eggplant, meat, and béchamel.",
     "steps": [
@@ -259,6 +287,7 @@ export const recipeBook = [
   },
   {
     "name": "baingan bharta",
+    "itemId": "baingan_bharta",
     "origin": "India",
     "description": "Smoky mashed eggplant cooked with spices.",
     "steps": [
@@ -271,6 +300,7 @@ export const recipeBook = [
   },
   {
     "name": "bun cha",
+    "itemId": "bun_cha",
     "origin": "Vietnam",
     "description": "Grilled pork with noodles, herbs, and dipping sauce.",
     "steps": [
@@ -283,6 +313,7 @@ export const recipeBook = [
   },
   {
     "name": "ful medames",
+    "itemId": "ful_medames",
     "origin": "Egypt",
     "description": "Mashed fava beans with olive oil, garlic, and lemon.",
     "steps": [
@@ -294,6 +325,7 @@ export const recipeBook = [
   },
   {
     "name": "shakshuka",
+    "itemId": "shakshuka",
     "origin": "Middle East/North Africa",
     "description": "Poached eggs in spicy tomato sauce.",
     "steps": [
@@ -306,6 +338,7 @@ export const recipeBook = [
   },
   {
     "name": "cassoulet",
+    "itemId": "cassoulet",
     "origin": "France",
     "description": "Slow-cooked white bean stew with meat.",
     "steps": [
@@ -318,6 +351,7 @@ export const recipeBook = [
   },
   {
     "name": "katsudon",
+    "itemId": "katsudon",
     "origin": "Japan",
     "description": "Pork cutlet served over rice with egg and onions.",
     "steps": [
@@ -330,6 +364,7 @@ export const recipeBook = [
   },
   {
     "name": "ugali with sukuma wiki",
+    "itemId": "ugali_with_sukuma_wiki",
     "origin": "Kenya",
     "description": "Maize porridge served with sautéed greens.",
     "steps": [
@@ -342,6 +377,7 @@ export const recipeBook = [
   },
   {
     "name": "pastel de choclo",
+    "itemId": "pastel_de_choclo",
     "origin": "Chile",
     "description": "Corn pie with meat and egg filling.",
     "steps": [
@@ -354,6 +390,7 @@ export const recipeBook = [
   },
   {
     "name": "rosti",
+    "itemId": "rosti",
     "origin": "Switzerland",
     "description": "Crispy pan-fried grated potatoes.",
     "steps": [
@@ -366,6 +403,7 @@ export const recipeBook = [
   },
   {
     "name": "banh xeo",
+    "itemId": "banh_xeo",
     "origin": "Vietnam",
     "description": "Savory crispy rice flour crepes with pork and shrimp.",
     "steps": [
@@ -378,6 +416,7 @@ export const recipeBook = [
   },
   {
     "name": "bobotie",
+    "itemId": "bobotie",
     "origin": "South Africa",
     "description": "Baked curried meat casserole with egg topping.",
     "steps": [
@@ -390,6 +429,7 @@ export const recipeBook = [
   },
   {
     "name": "pav bhaji",
+    "itemId": "pav_bhaji",
     "origin": "India",
     "description": "Spiced mashed vegetable curry served with buttered bread rolls.",
     "steps": [
@@ -401,6 +441,7 @@ export const recipeBook = [
   },
   {
     "name": "loco moco",
+    "itemId": "loco_moco",
     "origin": "Hawaii, USA",
     "description": "Rice topped with burger patty, fried egg, and gravy.",
     "steps": [
@@ -413,6 +454,7 @@ export const recipeBook = [
   },
   {
     "name": "zapiekanka",
+    "itemId": "zapiekanka",
     "origin": "Poland",
     "description": "Open-faced toasted sandwich with mushrooms and cheese.",
     "steps": [
@@ -425,6 +467,7 @@ export const recipeBook = [
   },
   {
     "name": "bibimbap",
+    "itemId": "bibimbap",
     "origin": "Korea",
     "description": "Mixed rice bowl with vegetables, meat, and egg.",
     "steps": [
@@ -437,6 +480,7 @@ export const recipeBook = [
   },
   {
     "name": "thieboudienne",
+    "itemId": "thieboudienne",
     "origin": "Senegal",
     "description": "Spiced fish and rice stew with vegetables.",
     "steps": [
@@ -448,9 +492,10 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "karē raisu (japanese curry)",
+    "name": "karē raisu",
+    "itemId": "karē_raisu",
     "origin": "Japan",
-    "description": "Thick curry with vegetables and meat over rice.",
+    "description": "Thick Japanese curry with vegetables and meat over rice.",
     "steps": [
       "Sauté onions, carrots, and potatoes.",
       "Add meat and brown.",
@@ -461,6 +506,7 @@ export const recipeBook = [
   },
   {
     "name": "cachapas",
+    "itemId": "cachapas",
     "origin": "Venezuela",
     "description": "Sweet corn pancakes filled with cheese.",
     "steps": [
@@ -472,6 +518,7 @@ export const recipeBook = [
   },
   {
     "name": "sarma",
+    "itemId": "sarma",
     "origin": "Balkans",
     "description": "Cabbage rolls stuffed with meat and rice.",
     "steps": [
@@ -483,6 +530,7 @@ export const recipeBook = [
   },
   {
     "name": "injera with doro wat",
+    "itemId": "injera_with_doro_wat",
     "origin": "Ethiopia",
     "description": "Spongy flatbread served with spicy chicken stew.",
     "steps": [
@@ -495,6 +543,7 @@ export const recipeBook = [
   },
   {
     "name": "khao soi",
+    "itemId": "khao_soi",
     "origin": "Thailand/Laos",
     "description": "Coconut curry noodle soup with crispy toppings.",
     "steps": [
@@ -506,6 +555,7 @@ export const recipeBook = [
   },
   {
     "name": "menemen",
+    "itemId": "menemen",
     "origin": "Turkey",
     "description": "Scrambled eggs with tomatoes and peppers.",
     "steps": [
@@ -517,6 +567,7 @@ export const recipeBook = [
   },
   {
     "name": "bandeja paisa",
+    "itemId": "bandeja_paisa",
     "origin": "Colombia",
     "description": "Hearty platter with beans, rice, meats, egg, and avocado.",
     "steps": [
@@ -528,6 +579,7 @@ export const recipeBook = [
   },
   {
     "name": "khachapuri",
+    "itemId": "khachapuri",
     "origin": "Georgia",
     "description": "Cheese-filled bread with egg yolk.",
     "steps": [
@@ -539,6 +591,7 @@ export const recipeBook = [
   },
   {
     "name": "koshari",
+    "itemId": "koshari",
     "origin": "Egypt",
     "description": "Layered dish with rice, lentils, pasta, and spicy tomato sauce.",
     "steps": [
@@ -550,6 +603,7 @@ export const recipeBook = [
   },
   {
     "name": "moqueca",
+    "itemId": "moqueca",
     "origin": "Brazil",
     "description": "Fish stew with coconut milk and palm oil.",
     "steps": [
@@ -560,7 +614,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Arepas",
+    "name": "arepas",
+    "itemId": "arepas",
     "origin": "Venezuela",
     "description": "Cornmeal cakes filled with meats, cheese, or beans.",
     "steps": [
@@ -570,7 +625,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Colcannon",
+    "name": "colcannon",
+    "itemId": "colcannon",
     "origin": "Ireland",
     "description": "Mashed potatoes with cabbage and onions.",
     "steps": [
@@ -580,7 +636,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Mie Goreng",
+    "name": "mie goreng",
+    "itemId": "mie_goreng",
     "origin": "Indonesia",
     "description": "Stir-fried noodles with vegetables and protein.",
     "steps": [
@@ -590,7 +647,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Raclette",
+    "name": "raclette",
+    "itemId": "raclette",
     "origin": "Switzerland",
     "description": "Melted cheese served over potatoes and pickles.",
     "steps": [
@@ -600,7 +658,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Jollof Rice",
+    "name": "jollof rice",
+    "itemId": "jollof_rice",
     "origin": "West Africa",
     "description": "Spiced tomato-based rice dish.",
     "steps": [
@@ -610,7 +669,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Doro Wat",
+    "name": "doro wat",
+    "itemId": "doro_wat",
     "origin": "Ethiopia",
     "description": "Spicy chicken stew with boiled eggs.",
     "steps": [
@@ -620,7 +680,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Fesenjan",
+    "name": "fesenjan",
+    "itemId": "fesenjan",
     "origin": "Iran",
     "description": "Pomegranate and walnut chicken stew.",
     "steps": [
@@ -630,7 +691,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Kokoda",
+    "name": "kokoda",
+    "itemId": "kokoda",
     "origin": "Fiji",
     "description": "Citrus-marinated raw fish with coconut.",
     "steps": [
@@ -640,7 +702,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Clam Chowder",
+    "name": "clam chowder",
+    "itemId": "clam_chowder",
     "origin": "USA (New England)",
     "description": "Creamy soup with clams, potatoes, and bacon.",
     "steps": [
@@ -650,7 +713,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Beshbarmak",
+    "name": "beshbarmak",
+    "itemId": "beshbarmak",
     "origin": "Kazakhstan",
     "description": "Boiled meat with pasta and onion sauce.",
     "steps": [
@@ -660,7 +724,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Hoppers",
+    "name": "hoppers",
+    "itemId": "hoppers",
     "origin": "Sri Lanka",
     "description": "Fermented rice pancakes with crispy edges.",
     "steps": [
@@ -670,7 +735,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Tamago Kake Gohan",
+    "name": "tamago kake gohan",
+    "itemId": "tamago_kake_gohan",
     "origin": "Japan",
     "description": "Raw egg over hot rice with soy sauce.",
     "steps": [
@@ -680,7 +746,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Plov",
+    "name": "plov",
+    "itemId": "plov",
     "origin": "Uzbekistan",
     "description": "Rice pilaf with meat and carrots.",
     "steps": [
@@ -690,7 +757,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Ceviche",
+    "name": "ceviche",
+    "itemId": "ceviche",
     "origin": "Peru",
     "description": "Raw fish cured in citrus with onions and chili.",
     "steps": [
@@ -700,7 +768,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Frybread",
+    "name": "frybread",
+    "itemId": "frybread",
     "origin": "Native American",
     "description": "Fried flat dough served sweet or savory.",
     "steps": [
@@ -710,7 +779,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Boerewors Roll",
+    "name": "boerewors roll",
+    "itemId": "boerewors_roll",
     "origin": "South Africa",
     "description": "Grilled sausage in a bun with sauces.",
     "steps": [
@@ -720,7 +790,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Okra Soup",
+    "name": "okra soup",
+    "itemId": "okra_soup",
     "origin": "Nigeria",
     "description": "Slimy stew made with okra and meats.",
     "steps": [
@@ -730,7 +801,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Gallo Pinto",
+    "name": "gallo pinto",
+    "itemId": "gallo_pinto",
     "origin": "Costa Rica",
     "description": "Stir-fried rice and beans with spices.",
     "steps": [
@@ -740,7 +812,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Curanto",
+    "name": "curanto",
+    "itemId": "curanto",
     "origin": "Chile",
     "description": "Seafood, meat, and vegetables cooked in an earth oven.",
     "steps": [
@@ -750,7 +823,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Fried Insects",
+    "name": "fried insects",
+    "itemId": "fried_insects",
     "origin": "Thailand",
     "description": "Crispy bugs seasoned and deep-fried.",
     "steps": [
@@ -760,7 +834,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Shakshuka",
+    "name": "shakshuka",
+    "itemId": "shakshuka",
     "origin": "Tunisia",
     "description": "Poached eggs in spiced tomato sauce.",
     "steps": [
@@ -770,7 +845,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Zhoug",
+    "name": "zhoug",
+    "itemId": "zhoug",
     "origin": "Yemen",
     "description": "Spicy cilantro chili sauce.",
     "steps": [
@@ -780,7 +856,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Banitsa",
+    "name": "banitsa",
+    "itemId": "banitsa",
     "origin": "Bulgaria",
     "description": "Layered pastry with egg and cheese filling.",
     "steps": [
@@ -790,7 +867,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Caldo Verde",
+    "name": "caldo verde",
+    "itemId": "caldo_verde",
     "origin": "Portugal",
     "description": "Potato and kale soup with sausage.",
     "steps": [
@@ -800,7 +878,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Brigadeiro",
+    "name": "brigadeiro",
+    "itemId": "brigadeiro",
     "origin": "Brazil",
     "description": "Chocolate fudge truffles.",
     "steps": [
@@ -810,7 +889,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Burek",
+    "name": "burek",
+    "itemId": "burek",
     "origin": "Bosnia",
     "description": "Savory pastry with meat or cheese filling.",
     "steps": [
@@ -820,7 +900,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Pozole",
+    "name": "pozole",
+    "itemId": "pozole",
     "origin": "Mexico",
     "description": "Hominy stew with pork and red chili broth.",
     "steps": [
@@ -830,7 +911,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Tteokbokki",
+    "name": "tteokbokki",
+    "itemId": "tteokbokki",
     "origin": "Korea",
     "description": "Spicy rice cakes in gochujang sauce.",
     "steps": [
@@ -840,7 +922,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Avgolemono Soup",
+    "name": "avgolemono soup",
+    "itemId": "avgolemono_soup",
     "origin": "Greece",
     "description": "Lemon chicken soup thickened with egg.",
     "steps": [
@@ -850,7 +933,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Fufu",
+    "name": "fufu",
+    "itemId": "fufu",
     "origin": "West Africa",
     "description": "Starchy dough made from yam or cassava.",
     "steps": [
@@ -860,7 +944,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Choripan",
+    "name": "choripan",
+    "itemId": "choripan",
     "origin": "Argentina",
     "description": "Grilled sausage sandwich with chimichurri.",
     "steps": [
@@ -870,7 +955,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Smørrebrød",
+    "name": "smørrebrød",
+    "itemId": "smørrebrød",
     "origin": "Denmark",
     "description": "Open-faced rye sandwiches with various toppings.",
     "steps": [
@@ -880,7 +966,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Dum Aloo",
+    "name": "dum aloo",
+    "itemId": "dum_aloo",
     "origin": "India",
     "description": "Potatoes simmered in spiced yogurt gravy.",
     "steps": [
@@ -890,7 +977,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Patacones",
+    "name": "patacones",
+    "itemId": "patacones",
     "origin": "Colombia",
     "description": "Twice-fried green plantain discs.",
     "steps": [
@@ -900,7 +988,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Feijoada",
+    "name": "feijoada",
+    "itemId": "feijoada",
     "origin": "Brazil",
     "description": "Black bean stew with pork and sausage.",
     "steps": [
@@ -910,7 +999,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Lahmacun",
+    "name": "lahmacun",
+    "itemId": "lahmacun",
     "origin": "Turkey",
     "description": "Thin flatbread topped with minced spiced meat.",
     "steps": [
@@ -920,7 +1010,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Rendang",
+    "name": "rendang",
+    "itemId": "rendang",
     "origin": "Indonesia",
     "description": "Slow-cooked dry beef curry.",
     "steps": [
@@ -930,7 +1021,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Kaiserschmarrn",
+    "name": "kaiserschmarrn",
+    "itemId": "kaiserschmarrn",
     "origin": "Austria",
     "description": "Shredded caramelized pancake with fruit.",
     "steps": [
@@ -940,7 +1032,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Malva Pudding",
+    "name": "malva pudding",
+    "itemId": "malva_pudding",
     "origin": "South Africa",
     "description": "Spongy caramel dessert with cream sauce.",
     "steps": [
@@ -950,7 +1043,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "Asam Laksa",
+    "name": "asam laksa",
+    "itemId": "asam_laksa",
     "origin": "Malaysia",
     "description": "Tangy fish noodle soup with tamarind and herbs.",
     "steps": [
@@ -960,7 +1054,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "sunflower_seed_risotto",
+    "name": "sunflower seed risotto",
+    "itemId": "sunflower_seed_risotto",
     "origin": "Hamstoria",
     "description": "Creamy risotto made from soaked sunflower seeds and oats.",
     "steps": [
@@ -970,7 +1065,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "apple_dandelion_crisps",
+    "name": "apple dandelion crisps",
+    "itemId": "apple_dandelion_crisps",
     "origin": "Hamsterdam",
     "description": "Thinly sliced apples with dried dandelion petals and a hint of cinnamon.",
     "steps": [
@@ -980,7 +1076,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "millet_loaf",
+    "name": "millet loaf",
+    "itemId": "millet_loaf",
     "origin": "Nestville",
     "description": "Savory loaf made from cooked millet, pumpkin, and herbs.",
     "steps": [
@@ -990,7 +1087,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "carrot_hay_tartlets",
+    "name": "carrot hay tartlets",
+    "itemId": "carrot_hay_tartlets",
     "origin": "Hamshire",
     "description": "Mini tartlets with grated carrot, timothy hay, and seed crust.",
     "steps": [
@@ -1000,7 +1098,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "banana_oat_nibbles",
+    "name": "banana oat nibbles",
+    "itemId": "banana_oat_nibbles",
     "origin": "Rodentia",
     "description": "No-bake treats made from banana, oats, and flaxseed.",
     "steps": [
@@ -1010,7 +1109,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "pea_pod_parfaits",
+    "name": "pea pod parfaits",
+    "itemId": "pea_pod_parfaits",
     "origin": "Hamsterdam",
     "description": "Layered snack with mashed peas, corn, and alfalfa crumble.",
     "steps": [
@@ -1020,7 +1120,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "broccoli_leaf_chips",
+    "name": "broccoli leaf chips",
+    "itemId": "broccoli_leaf_chips",
     "origin": "Burrowgundy",
     "description": "Crispy baked broccoli leaves seasoned with a pinch of dried basil.",
     "steps": [
@@ -1030,7 +1131,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "cucumber_sesame_stackers",
+    "name": "cucumber sesame stackers",
+    "itemId": "cucumber_sesame_stackers",
     "origin": "Forage Fields",
     "description": "Thin cucumber slices stacked with sesame and apple slivers.",
     "steps": [
@@ -1040,7 +1142,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "blueberry_timothy_biscuits",
+    "name": "blueberry timothy biscuits",
+    "itemId": "blueberry_timothy_biscuits",
     "origin": "Meadowshire",
     "description": "Soft treats baked with blueberries and timothy hay dust.",
     "steps": [
@@ -1050,7 +1153,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "almond_flax_crunchers",
+    "name": "almond flax crunchers",
+    "itemId": "almond_flax_crunchers",
     "origin": "Gnaw York",
     "description": "High-protein snack bars made with almonds, flaxseed, and oats.",
     "steps": [
@@ -1060,7 +1164,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "chia_pudding_delight",
+    "name": "chia pudding delight",
+    "itemId": "chia_pudding_delight",
     "origin": "Hammywood",
     "description": "Tiny chia seed pudding made with almond milk and diced strawberries.",
     "steps": [
@@ -1070,7 +1175,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "spinach_oat_quichelets",
+    "name": "spinach oat quichelets",
+    "itemId": "spinach_oat_quichelets",
     "origin": "Leafridge",
     "description": "Mini quiches made from oats, spinach, and ground sunflower seeds.",
     "steps": [
@@ -1080,7 +1186,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "beetroot_nibble_rolls",
+    "name": "beetroot nibble rolls",
+    "itemId": "beetroot_nibble_rolls",
     "origin": "The Burrow Bistro",
     "description": "Sweet beetroot and apple mash rolled in lettuce leaves.",
     "steps": [
@@ -1090,7 +1197,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "parsnip_hay_fritters",
+    "name": "parsnip hay fritters",
+    "itemId": "parsnip_hay_fritters",
     "origin": "Nibbleton",
     "description": "Shredded parsnip fritters with hay flakes and flaxmeal.",
     "steps": [
@@ -1100,7 +1208,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "pumpkin_seed_granola",
+    "name": "pumpkin seed granola",
+    "itemId": "pumpkin_seed_granola",
     "origin": "Gnawthampton",
     "description": "Toasted seed mix with pumpkin chunks and dried cranberries.",
     "steps": [
@@ -1110,7 +1219,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "pear_leaf_sandwiches",
+    "name": "pear leaf sandwiches",
+    "itemId": "pear_leaf_sandwiches",
     "origin": "Hambridge Hollow",
     "description": "Thin pear slices layered with nut mash between dandelion leaves.",
     "steps": [
@@ -1120,7 +1230,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "zucchini_ribbon_twists",
+    "name": "zucchini ribbon twists",
+    "itemId": "zucchini_ribbon_twists",
     "origin": "Tunnelton",
     "description": "Raw zucchini ribbons twisted with basil and flax sprinkles.",
     "steps": [
@@ -1130,7 +1241,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "apple_bark_crackers",
+    "name": "apple bark crackers",
+    "itemId": "apple_bark_crackers",
     "origin": "Hamford Hills",
     "description": "Crunchy fruit crackers made with dried apple and bark dust.",
     "steps": [
@@ -1140,7 +1252,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "radish_petal_salad",
+    "name": "radish petal salad",
+    "itemId": "radish_petal_salad",
     "origin": "Squeaktown Grove",
     "description": "Fresh salad of radish petals, carrot shreds, and clover sprouts.",
     "steps": [
@@ -1150,7 +1263,8 @@ export const recipeBook = [
     ]
   },
   {
-    "name": "hazelnut_berry_bundles",
+    "name": "hazelnut berrybundles",
+    "itemId": "hazelnut_berrybundles",
     "origin": "Whiskerville",
     "description": "Mini bundles of crushed hazelnuts and berries in mint leaves.",
     "steps": [
@@ -1159,4 +1273,6 @@ export const recipeBook = [
       "Fold into tiny wraps and serve chilled."
     ]
   }
-] as const satisfies FixedSizeArray<Recipe, typeof recipeBookSize>;
+] as const satisfies FixedSizeArray<ValidationRecipe, typeof recipeBookSize>;
+
+export type FoodItemId = (typeof recipeBook)[number]["itemId"];
