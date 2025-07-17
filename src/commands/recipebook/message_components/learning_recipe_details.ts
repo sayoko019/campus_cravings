@@ -1,10 +1,9 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle } from "discord.js";
 import { Recipe } from "../recipe";
-import { ViewedState, viewedStates } from "../viewed_states";
-import { commandModule } from "../index.js";
-import { handleBrowsingRecipes } from "./browsing_recipies";
-
-const commandName: string = commandModule.commandName;
+import { ViewedState, viewedStates } from "../viewed_states.js";
+import { commandName } from "../index.js";
+import { handleBrowsingRecipes } from "./browsing_recipies.js";
+import { handlePerformingCookingStep } from "./perfoming_cooking_step/index.js";
 
 function buildRecipeDetailsMessageContent(recipe: Recipe): string {
     const title = `# ${recipe.name}`;
@@ -20,7 +19,11 @@ export async function updateMessageWithRecipe(interaction: ButtonInteraction, vi
         new ButtonBuilder()
             .setCustomId("back_to_recipes")
             .setLabel("Back to Recipes")
-            .setStyle(ButtonStyle.Primary)
+            .setStyle(ButtonStyle.Primary),
+        new ButtonBuilder()
+            .setCustomId("start_cooking_recipe")
+            .setLabel("Start Cooking")
+            .setStyle(ButtonStyle.Success),
     );
 
     const payload = {
@@ -40,7 +43,7 @@ export async function handleBackToRecipes(interaction: ButtonInteraction) {
 
     let viewedState: ViewedState = viewedStates.get(userId)!;
 
-    if (viewedState.id !== "learning_recipe_details") {
+    if (!["learning_recipe_details", "performing_cooking_step"].includes(viewedState.id)) {
         return interaction.reply({
             content: "You are not currently viewing recipe details.",
             ephemeral: true,
@@ -55,4 +58,33 @@ export async function handleBackToRecipes(interaction: ButtonInteraction) {
     viewedStates.set(userId, viewedState);
 
     await handleBrowsingRecipes(interaction, viewedState);
+}
+
+export async function handleStartCookingRecipe(interaction: ButtonInteraction) {
+    const userId = interaction.user.id;
+
+    if (!viewedStates.has(userId)) {
+        return interaction.reply(`Type \`/${commandName}\` to start browsing recipes too!`);
+    }
+
+    let viewedState: ViewedState = viewedStates.get(userId)!;
+
+    if (viewedState.id !== "learning_recipe_details") {
+        return interaction.reply({
+            content: "You are not currently viewing recipe details.",
+            ephemeral: true,
+        });
+    }
+
+    viewedState = {
+        id: "performing_cooking_step",
+        recipeIndex: viewedState.recipeIndex,
+        recipe: viewedState.recipe,
+        stepIndex: 0,
+        step: viewedState.recipe.steps[0],
+        total_steps: viewedState.recipe.steps.length,
+    } satisfies ViewedState;
+    viewedStates.set(userId, viewedState);
+
+    await handlePerformingCookingStep(interaction, viewedState);
 }

@@ -5,9 +5,10 @@ import {
 import { COOK_CHANNEL_ID, type CommandModule } from "../../common.js";
 import { ViewedState, viewedStates } from "./viewed_states.js";
 import { defaultBrowsingRecipesViewedState, handleBrowsingRecipes, handleLearnMore, handleNextRecipe, handlePreviousRecipe } from "./message_components/browsing_recipies.js";
-import { handleBackToRecipes } from "./message_components/learning_recipe_details.js";
+import { handleBackToRecipes, handleStartCookingRecipe } from "./message_components/learning_recipe_details.js";
+import { handleCookingStepNext } from "./message_components/perfoming_cooking_step/index.js";
 
-const commandName = "recipe";
+export const commandName = "recipe";
 
 const command = new SlashCommandBuilder()
     .setName(commandName)
@@ -46,7 +47,12 @@ async function onButtonInteraction(interaction: ButtonInteraction) {
         case "back_to_recipes":
             await handleBackToRecipes(interaction);
             return;
-
+        case "start_cooking_recipe":
+            await handleStartCookingRecipe(interaction);
+            return;
+        case "cooking_step_next":
+            await handleCookingStepNext(interaction);
+            return;
     }
 }
 

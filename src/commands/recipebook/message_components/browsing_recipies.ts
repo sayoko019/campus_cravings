@@ -1,10 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction } from "discord.js";
-import { ViewedState, viewedStates } from "../viewed_states";
-import { commandModule } from "../index.js";
+import { ViewedState, viewedStates } from "../viewed_states.js";
+import { commandName } from "../index.js";
 import { Recipe, recipeBook } from "../recipe.js";
-import { updateMessageWithRecipe } from "./learning_recipe_details";
-
-const commandName: string = commandModule.commandName;
+import { updateMessageWithRecipe } from "./learning_recipe_details.js";
 
 export function defaultBrowsingRecipesViewedState(): ViewedState {
     return {
