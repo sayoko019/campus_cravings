@@ -27,6 +27,13 @@ git pull
 * `/eat` command being made
 * edit the `/serve` command, so they can serve after cooking with recipebook
 * mini games for cooking with recipe book
+* timers for cooking mini games
+* if they fail to complete within time limit they must restart 
+( Maybe I want like the bot to scold them like gordan Ramsey)
+* currency system for the bot. So the more U cook the more U earn money n U can use the money to buy food
+* ai for custom recipe book making
+* Ticketing system for when people order food the order shows up in the kitchen and like a list of unfinished food. 
+* Or after cooking from recipe book and they submit they can either give a player or send it out for display for anyone to eat in cafeteria
 
 ## commiting changes
 
