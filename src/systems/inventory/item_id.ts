@@ -1,3 +1,3 @@
-import { FoodItemId } from "../../commands/recipebook/recipe";
+import { FoodItemId } from "../../commands/recipe/recipe";
 
 export type ItemID = FoodItemId;

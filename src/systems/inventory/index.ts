@@ -85,11 +85,11 @@ export function grantItem(userId: User["id"], inventoryItemData: InventoryItemDa
     }
 }
 
-export function tryExpendItem(userId: User["id"], itemId: ItemID, quantity: number = 1): boolean {
+export function tryExpendItem(userId: User["id"], filter: (item: InventoryItemData) => boolean, quantity: number = 1): boolean {
     if (!inventories.has(userId)) return false;
     const userInventory: InventoryItemData[] = inventories.get(userId)!;
 
-    const itemIndex = userInventory.findIndex(item => item.itemId === itemId);
+    const itemIndex = userInventory.findIndex(filter);
     if (itemIndex === -1 || userInventory[itemIndex].quantity < quantity) return false;
 
     userInventory[itemIndex].quantity -= quantity;

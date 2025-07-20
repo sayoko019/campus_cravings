@@ -20,7 +20,7 @@ import { commandModule as foodfight } from "./commands/foodfight.js";
 import { commandModule as serve } from "./commands/serve.js";
 import { commandModule as inspect } from "./commands/inspect.js";
 import { commandModule as clean } from "./commands/clean.js";
-import { commandModule as recipebook } from "./commands/recipebook/index.js";
+import { commandModule as recipebook } from "./commands/recipe/index.js";
 
 import { commandModule as inventory } from "./systems/inventory/commands/inventory.js";
 
