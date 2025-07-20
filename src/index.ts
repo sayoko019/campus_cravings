@@ -14,6 +14,7 @@ import { systemModule as inventorySystem } from "./systems/inventory/index.js";
 
 import { commandModule as order } from "./commands/order.js";
 import { commandModule as cook } from "./commands/cook.js";
+import { commandModule as eat } from "./commands/eat.js";
 import { commandModule as taste } from "./commands/taste.js";
 import { commandModule as specials } from "./commands/specials.js";
 import { commandModule as foodfight } from "./commands/foodfight.js";
@@ -24,7 +25,7 @@ import { commandModule as recipebook } from "./commands/recipe/index.js";
 
 import { commandModule as inventory } from "./systems/inventory/commands/inventory.js";
 
-const commandModules = [order, cook, taste, specials, foodfight, serve, inspect, clean, recipebook, inventory] satisfies CommandModule[];
+const commandModules = [order, cook, eat, taste, specials, foodfight, serve, inspect, clean, recipebook, inventory] satisfies CommandModule[];
 
 import * as dotenv from "dotenv";
 

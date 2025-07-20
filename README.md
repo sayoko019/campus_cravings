@@ -25,7 +25,6 @@ git pull
 ## TODO list
 
 * `/eat` command being made
-* edit the `/serve` command, so they can serve after cooking with recipebook
 * mini games for cooking with recipe book
 * timers for cooking mini games
 * if they fail to complete within time limit they must restart 

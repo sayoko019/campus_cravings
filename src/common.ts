@@ -78,8 +78,10 @@ class FoodQueueMap {
 
 // Enquing into recentOrders should omit the orderId argument
 export const recentOrders = new FoodQueueMap();
-// Enquing into recentDishes should explicitly provide the userId argument
-export const recentDishes = new FoodQueueMap();
+// Enquing into recentCookedDishes should explicitly provide the userId argument
+export const recentCookedDishes = new FoodQueueMap();
+// Enquing into recentServedDishes should explicitly provide the userId argument
+export const recentServedDishes = new FoodQueueMap();
 
 export function randomElement<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];

@@ -3,7 +3,7 @@ import {
     Client,
     SlashCommandBuilder
 } from "discord.js";
-import { recentOrders, recentDishes, cursedIngredients, COOK_CHANNEL_ID, type CommandModule } from "../common.js";
+import { recentOrders, recentCookedDishes, cursedIngredients, COOK_CHANNEL_ID, type CommandModule } from "../common.js";
 
 const commandName = "cook";
 
@@ -37,7 +37,7 @@ function handle(client: Client, interaction: ChatInputCommandInteraction) {
 
     const { food: cookedFood, userId, orderId } = order;
 
-    recentDishes.enqueue(cookedFood, userId, orderId);
+    recentCookedDishes.enqueue(cookedFood, userId, orderId);
 
     interaction.reply(
         `You successfully cooked the ordered dish: ${food}!`,

@@ -1,5 +1,5 @@
 import { ChannelType, ChatInputCommandInteraction, Client, SlashCommandBuilder, User, type Channel } from "discord.js";
-import { recentDishes, COOK_CHANNEL_ID, ORDER_CHANNEL_ID, type CommandModule } from "../common.js";
+import { recentCookedDishes, COOK_CHANNEL_ID, ORDER_CHANNEL_ID, type CommandModule, recentServedDishes } from "../common.js";
 import { getInventory, InventoryItemData, tryExpendItem } from "../systems/inventory/index.js";
 
 const commandName = "serve";
@@ -48,7 +48,7 @@ function handle(client: Client, interaction: ChatInputCommandInteraction) {
         });
 
     if (source === "kitchen") {
-        const order = recentDishes.dequeue(food, target.id);
+        const order = recentCookedDishes.dequeue(food, target.id);
 
         if (!order) {
             return interaction.reply({
@@ -65,6 +65,8 @@ function handle(client: Client, interaction: ChatInputCommandInteraction) {
             });
         }
     };
+
+    recentServedDishes.enqueue(food, target.id);
 
     interaction.reply(
         `You served ${target.username} a plate of ${food}. They look... concerned.`,
