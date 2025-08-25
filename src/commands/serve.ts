@@ -48,7 +48,7 @@ function handle(client: Client, interaction: ChatInputCommandInteraction) {
         });
 
     if (source === "kitchen") {
-        const order = recentCookedDishes.dequeue(food, target.id);
+        const order = recentCookedDishes.dequeue((orderId, item) => item.food === food && item.designatedUserId === user.id);
 
         if (!order) {
             return interaction.reply({
@@ -66,7 +66,7 @@ function handle(client: Client, interaction: ChatInputCommandInteraction) {
         }
     };
 
-    recentServedDishes.enqueue(food, target.id);
+    recentServedDishes.enqueue(food, target.id, { providerId: user.id });
 
     interaction.reply(
         `You served ${target.username} a plate of ${food}. They look... concerned.`,

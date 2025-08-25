@@ -3,7 +3,7 @@ import {
     Client,
     SlashCommandBuilder
 } from "discord.js";
-import { recentOrders, recentCookedDishes, cursedIngredients, COOK_CHANNEL_ID, type CommandModule } from "../common.js";
+import { recentOrders, recentCookedDishes, cursedIngredients, COOK_CHANNEL_ID, type CommandModule, FoodQueueItemBase, OrderId } from "../common.js";
 
 const commandName = "cook";
 
@@ -17,7 +17,7 @@ const command = new SlashCommandBuilder()
 const permittedChannels = [COOK_CHANNEL_ID];
 
 function handle(client: Client, interaction: ChatInputCommandInteraction) {
-    const { options } = interaction;
+    const { options, user } = interaction;
 
     const food = options.getString("food")!.toLowerCase();
     let isCursed = cursedIngredients.find((word) => food.includes(word));
@@ -26,7 +26,7 @@ function handle(client: Client, interaction: ChatInputCommandInteraction) {
             `You tried to cook ${food}, and summoned a kitchen demon. It's loose now.`,
         );
     }
-    const order = recentOrders.dequeue(food);
+    const order: FoodQueueItemBase & { orderId: OrderId } | null = recentOrders.dequeue((_orderId, item) => item.food === food);
 
     if (!order) {
         return interaction.reply({
@@ -35,9 +35,7 @@ function handle(client: Client, interaction: ChatInputCommandInteraction) {
         });
     }
 
-    const { food: cookedFood, userId, orderId } = order;
-
-    recentCookedDishes.enqueue(cookedFood, userId, orderId);
+    recentCookedDishes.enqueue(order.food, order.designatedUserId, { providerId: user.id }, order.orderId);
 
     interaction.reply(
         `You successfully cooked the ordered dish: ${food}!`,

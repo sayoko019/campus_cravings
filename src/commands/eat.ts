@@ -1,5 +1,5 @@
-import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from "discord.js";
-import { CommandModule, ORDER_CHANNEL_ID, recentServedDishes } from "../common.js";
+import { ChatInputCommandInteraction, Client, SlashCommandBuilder, User } from "discord.js";
+import { CommandModule, FoodQueueItemBase, ORDER_CHANNEL_ID, OrderId, recentEatenDishes, recentServedDishes } from "../common.js";
 
 const commandName = "eat";
 const command = new SlashCommandBuilder()
@@ -13,14 +13,16 @@ function handle(client: Client, interaction: ChatInputCommandInteraction) {
     const { options, user } = interaction;
 
     const food: string = options.getString("food")!.toLowerCase();
-    const servedDish = recentServedDishes.dequeue(food, user.id);
+    const servedDish: FoodQueueItemBase & { providerId?: User["id"] } & { orderId: OrderId } | null = recentServedDishes.dequeue((orderId, item) => item.food === food && item.designatedUserId === user.id);
 
     if (!servedDish) {
         return interaction.reply({
-            content: "You don't have an active order for that dish.",
+            content: "No one served that dish to you.",
             ephemeral: true,
         });
     }
+
+    recentEatenDishes.enqueue(servedDish.food, user.id, { providerId: servedDish.providerId }, servedDish.orderId);
 
     interaction.reply(
         `You have successfully eaten the served dish: ${food}!`,

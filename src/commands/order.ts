@@ -1,9 +1,11 @@
 import {
+    Channel,
+    ChannelType,
     ChatInputCommandInteraction,
     Client,
     SlashCommandBuilder
 } from "discord.js";
-import { ORDER_CHANNEL_ID, cursedIngredients, recentOrders, randomElement, type CommandModule } from "../common.js";
+import { ORDER_CHANNEL_ID, cursedIngredients, recentOrders, randomElement, type CommandModule, COOK_CHANNEL_ID } from "../common.js";
 
 const commandName = "order";
 
@@ -55,14 +57,27 @@ function handle(client: Client, interaction: ChatInputCommandInteraction) {
 
     const food: string = options.getString("food")!.toLowerCase();
 
-    const orderId: number = recentOrders.enqueue(food, user.id);
+    // TODO: consider designating a chef for the order
+    const orderId: number = recentOrders.enqueue(food, user.id, {});
 
     const isCursed: boolean = cursedIngredients.find((word) => food.includes(word)) !== undefined;
     const responsesFunction: (food: string, orderId: number) => string[] = isCursed ? cursedOrderResponses : normalOrderResponses;
     const responseArray: string[] = responsesFunction(food, orderId);
     const response: string = randomElement(responseArray);
 
-    return interaction.reply(response);
+    interaction.reply(response);
+
+    const kitchenChannel: Channel = client.channels.cache.get(COOK_CHANNEL_ID)!;
+
+    if (kitchenChannel.type !== ChannelType.GuildText) {
+        console.error("Kitchen channel is not a text channel.");
+        return interaction.followUp({
+            content: "Error: Kitchen channel is not a text channel.",
+            ephemeral: true,
+        });
+    }
+
+    kitchenChannel.send(`There is an order for ${food}.`);
 }
 
 export const commandModule: CommandModule = {
